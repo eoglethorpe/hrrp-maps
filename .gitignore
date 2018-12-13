@@ -1,9 +1,19 @@
+#data
 *.csv
 *.json
 *.xl*
+
+python
 *.pyc
 *DS*
 
-#individual files
+images
+*.png
+*.svg
+
+#etc
 *.icloud*
-downloaded_xls/
+
+#qgis
+*.qgs~$
+
