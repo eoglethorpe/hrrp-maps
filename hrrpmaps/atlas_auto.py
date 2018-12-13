@@ -52,8 +52,7 @@ class at(object):
         self.apply_styling('wards', self.ward_style)
 
         self.make_atlas('palikas')
-        self.write_proj('./etc/inprog.qgs')
-
+        self.write_proj('%s/inprog.qgs' % self.out_path)
         self.exit()
 
     def add_layer(self, *args):
@@ -126,13 +125,13 @@ class at(object):
         self.myAtlas.setFilterFeatures(True)
 
         if self.pka_list:
-            # list = tuple([i for i in range(51001, 51003)])
             self.myAtlas.setFilterExpression('"PalikaCode" IN %s' % str(self.pka_list))
 
         #### image output name ####
         self.myAtlas.setFilenameExpression('PalikaCode')
 
-        print("Starting output for %s" % self.img_type)
+        print("Creating maps for output format: %s" % self.img_type)
+        print("Creating maps for for codes: %s" % str(self.pka_list))
 
         #### image and pdf settings ####
         pathlib.Path(self.out_path).mkdir(parents=True, exist_ok=True)
@@ -158,7 +157,7 @@ class at(object):
             if not result == QgsLayoutExporter.Success:
                 print(error)
 
-        print("Script done")
+        print("Map script completed")
 
     def _get_xls_row_vals(self, row):
         """get all values from an excel row"""
