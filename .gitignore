@@ -1,0 +1,9 @@
+*.csv
+*.json
+*.xl*
+*.pyc
+*DS*
+
+#individual files
+*.icloud*
+downloaded_xls/
