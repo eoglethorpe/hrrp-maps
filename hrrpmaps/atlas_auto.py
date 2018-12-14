@@ -124,14 +124,18 @@ class at(object):
         self.myAtlas.beginRender()
         self.myAtlas.setFilterFeatures(True)
 
+        assert(isinstance(self.pka_list, list))
+        #do this for instances where tup len == 1 and there is a trailing comma
+        tup_rep = str(self.pka_list).replace('[', '(').replace(']', ')')
+
         if self.pka_list:
-            self.myAtlas.setFilterExpression('"PalikaCode" IN %s' % str(self.pka_list))
+            self.myAtlas.setFilterExpression('"PalikaCode" IN %s' % tup_rep)
 
         #### image output name ####
         self.myAtlas.setFilenameExpression('PalikaCode')
 
         print("Creating maps for output format: %s" % self.img_type)
-        print("Creating maps for for codes: %s" % str(self.pka_list))
+        print("Creating maps for for codes: %s" % tup_rep)
 
         #### image and pdf settings ####
         pathlib.Path(self.out_path).mkdir(parents=True, exist_ok=True)
