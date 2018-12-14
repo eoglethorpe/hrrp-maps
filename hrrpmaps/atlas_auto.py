@@ -151,7 +151,7 @@ class at(object):
             if not result == QgsLayoutExporter.Success:
                 print(error)
 
-        elif self.img_type == 'img':
+        elif self.img_type == 'png':
             image_settings = QgsLayoutExporter(self.myAtlasMap).ImageExportSettings()
             imageExtension = '.png'
 
