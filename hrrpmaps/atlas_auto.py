@@ -1,4 +1,5 @@
 import os
+import platform
 import sys
 import csv
 import pathlib
@@ -16,7 +17,15 @@ class at(object):
                     atlas_style, parent_join_cd, to_join_code, img_type, out_path, pka_list = None):
 
         self.app = QgsApplication([], False)
-        self.app.setPrefixPath('/Applications/QGIS3.app/Contents/MacOS', True)
+
+        # Only use this for Mac OS
+        # [Ref: https://stackoverflow.com/questions/1854/python-what-os-am-i-running-on] # noqa
+        if platform.system() == 'Darwin':
+            self.app.setPrefixPath(
+                '/Applications/QGIS3.app/Contents/MacOS',
+                True,
+            )
+
         self.app.initQgis()
 
         self.project = QgsProject.instance()
