@@ -1,3 +1,7 @@
+#TODO: fix multiple run
+#TODO: work with geojson
+#TODO: tell nav about directory for django
+
 import os
 import sys
 import csv
@@ -15,13 +19,6 @@ class at(object):
     def __init__(self, data_uri, wards_uri, palika_uri, dists_uri, dists_syle, pka_style, pka_hide_style, ward_style,
                     atlas_style, parent_join_cd, to_join_code, img_type, out_path, pka_list = None):
 
-        self.app = QgsApplication([], False)
-        self.app.setPrefixPath('/Applications/QGIS3.app/Contents/MacOS', True)
-        self.app.initQgis()
-
-        self.project = QgsProject.instance()
-        self.project.setCrs(QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId))
-
         self.data_uri = data_uri
         self.wards_uri = wards_uri
         self.palika_uri = palika_uri
@@ -37,7 +34,16 @@ class at(object):
         self.img_type = img_type
         self.out_path = out_path
 
+    def setup(self):
+        self.app = QgsApplication([], False)
+        self.app.setPrefixPath('/Applications/QGIS3.app/Contents/MacOS', True)
+        self.app.initQgis()
+
+
     def make_maps(self):
+        self.project = QgsProject.instance()
+        self.project.setCrs(QgsCoordinateReferenceSystem(4326, QgsCoordinateReferenceSystem.EpsgCrsId))
+
         self.add_layer(self.get_map_data(self.data_uri, 'Map Data'))
         self.add_layer(self.wards_uri, 'wards', 'ogr')
         self.add_layer(self.palika_uri, 'palika_hide', 'ogr') # for hiding other palikas while atlasing
@@ -53,22 +59,40 @@ class at(object):
 
         self.make_atlas('palikas')
         self.write_proj('%s/inprog.qgs' % self.out_path)
-        self.exit()
+        self.project.clear()
 
     def add_layer(self, *args):
-        """check to see if layer properly added.
-            can also add with QgsProject.instance().addMapLayer() """
+        """add map layer and check to see if layer properly added.
+            supports:
+                data file (single param)
+                geojson (multiple param)
+                shp (multiple param)
 
-        #check to see if we're sending an already formed layer to add
+            recieve param: (directory, layer name, type)
+
+            note: can also add with QgsProject.instance().addMapLayer() """
+
+        nm = None
+
+        #check to see if we're sending an already formed layer to add - used for data file
         if len(args) == 1 & isinstance(args[0], QgsVectorLayer):
+            print('Importing {} as a vector'.format(args[0]))
             self.project.addMapLayer(args[0])
             nm = args[0].name()
 
-        else:
+        elif len(args) > 1:
+            print('Importing {} as a vector'.format(args[0]))
+            print(args)
             self.project.addMapLayer(QgsVectorLayer(*args))
             nm = args[1]
 
-        self.get_layer(nm)
+        if nm:
+            self.get_layer(nm)
+
+        else:
+            print()
+            print('***Bad map layer for {}***'.format(str(args)))
+            print()
 
     def get_layer(self, nm):
         # return layer object based on its given name, not Qs internal identifier
@@ -89,15 +113,15 @@ class at(object):
         joinObject.setJoinLayer(self.get_layer(to_join))
         self.get_layer(parent).addJoin(joinObject)
 
-
     def write_proj(self, loc):
         self.project.write(loc)
 
     def get_layers(self):
         return self.project.layerStore().mapLayers()
 
-
     def apply_styling(self, lay, style):
+        print(lay)
+        print(style)
         self.get_layer(lay).loadNamedStyle(style)
 
     def _open_atlas_styling(self):
@@ -209,4 +233,5 @@ class at(object):
         return vl
 
     def exit(self):
-        self.app.exitQgis()
+        print('ex')
+        self.app.exit()

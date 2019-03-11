@@ -2,25 +2,14 @@
 
 from hrrpmaps.atlas_auto import at
 
-test_list = (24001,
-                24002,
-                24003,
-                24004,
-                24005,
-                24006,
-                24007,
-                24008,
-                24009,
-                24010,
-                24011,
-                24012,
-                24013)
+test_list = ([24001,
+                24002])
 
-atlas = at(
+x = at(
     data_uri='./data/profile_data_structure_template.xlsx',
-    wards_uri='./hrrp_shapes/wards/merge.shp',
-    palika_uri='./hrrp_shapes/palika/GaPaNaPa_hrrp.shp',
-    dists_uri='./hrrp_shapes/districts/Districts_hrrp.shp',
+    wards_uri='./hrrp_shapes/jsons/merge.json',
+    palika_uri='./hrrp_shapes/jsons/GaPaNaPa_hrrp.json',
+    dists_uri='./hrrp_shapes/jsons/Districts_hrrp.json',
     dists_syle='./styles/dist_style.qml',
     pka_style='./styles/palika_style.qml',
     atlas_style='./styles/atlas_layout.qpt',
@@ -29,7 +18,10 @@ atlas = at(
     parent_join_cd='N_WCode',
     to_join_code='ward',
     pka_list=test_list,
-    img_type = 'img',
-    out_path = './maps/')
+    img_type = 'svg',
+    out_path = './maps/m/')
 
-atlas.make_maps()
+x.setup()
+x.make_maps()
+x.exit()
+del(x)

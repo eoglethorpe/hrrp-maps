@@ -1,0 +1,19 @@
+#apply layer
+
+import os
+import sys
+import csv
+import pathlib
+
+sys.path.append('/Applications/QGis3.app/Contents/Resources/python/')
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = '/Applications/QGIS3.app/Contents/Plugins'
+
+from qgis.core import *
+from qgis.PyQt.QtXml import QDomDocument
+from openpyxl import load_workbook
+
+
+project = QgsProject.instance()
+lay = QgsVectorLayer('/Users/ewanog/Documents/work/code/repos/palika-profile/resources/mapfiles/hrrp_shapes/palika/GaPaNaPa_hrrp.shp')
+project.addMapLayer(lay)
+lay.loadNamedStyle(/Users/ewanog/Documents/work/code/repos/palika-profile/resources/mapfiles/styles/palika_style.qml')
