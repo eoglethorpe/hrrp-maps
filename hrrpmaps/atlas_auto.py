@@ -3,6 +3,7 @@
 #TODO: tell nav about directory for django
 
 import os
+import platform
 import sys
 import csv
 import pathlib
@@ -233,5 +234,4 @@ class at(object):
         return vl
 
     def exit(self):
-        print('ex')
         self.app.exit()
