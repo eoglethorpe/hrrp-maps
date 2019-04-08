@@ -1,6 +1,6 @@
-#TODO: fix multiple run
-#TODO: work with geojson
-#TODO: tell nav about directory for django
+# TODO: fix multiple run
+# TODO: work with geojson
+# TODO: tell nav about directory for django
 
 import os
 import platform
@@ -8,17 +8,21 @@ import sys
 import csv
 import pathlib
 
-
 sys.path.append('/Applications/QGis3.app/Contents/Resources/python/')
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = '/Applications/QGIS3.app/Contents/Plugins'
 
-from qgis.core import *
-from qgis.PyQt.QtXml import QDomDocument
-from openpyxl import load_workbook
+
+from qgis.core import * # noqa E402
+from qgis.PyQt.QtXml import QDomDocument # noqa E402
+from openpyxl import load_workbook # noqa E402
+
 
 class at(object):
-    def __init__(self, data_uri, wards_uri, palika_uri, dists_uri, dists_syle, pka_style, pka_hide_style, ward_style,
-                    atlas_style, parent_join_cd, to_join_code, img_type, out_path, pka_list = None):
+    def __init__(
+            self, data_uri, wards_uri, palika_uri, dists_uri, dists_syle,
+            pka_style, pka_hide_style, ward_style, atlas_style, parent_join_cd,
+            to_join_code, img_type, out_path, pka_list=None,
+    ):
 
         self.data_uri = data_uri
         self.wards_uri = wards_uri
@@ -37,9 +41,14 @@ class at(object):
 
     def setup(self):
         self.app = QgsApplication([], False)
-        self.app.setPrefixPath('/Applications/QGIS3.app/Contents/MacOS', True)
+        # Only use this for Mac OS
+        # [Ref: https://stackoverflow.com/questions/1854/python-what-os-am-i-running-on] # noqa
+        if platform.system() == 'Darwin':
+            self.app.setPrefixPath(
+                '/Applications/QGIS3.app/Contents/MacOS',
+                True,
+            )
         self.app.initQgis()
-
 
     def make_maps(self):
         self.project = QgsProject.instance()
